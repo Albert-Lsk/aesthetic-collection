@@ -4,10 +4,12 @@ import { describe, expect, it } from "vitest";
 import HomePage from "./page";
 
 describe("HomePage", () => {
-  it("renders the initial collection shell", () => {
+  it("renders the resource library homepage", () => {
     render(createElement(HomePage));
 
-    expect(screen.getByRole("heading", { name: "Aesthetic Collection" })).toBeInTheDocument();
-    expect(screen.getByText("审美网站收藏册正在搭建。")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "审美网站收藏册" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "精选入口" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "资源库" })).toBeInTheDocument();
+    expect(screen.getByRole("searchbox", { name: "搜索网站" })).toBeInTheDocument();
   });
 });
