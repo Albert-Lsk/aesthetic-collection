@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteCard } from "../../../components/SiteCard";
 import { sites } from "../../../data/sites";
 import { getSiteBySlug, getSitesByType, getTypeLabel } from "../../../data/site-utils";
-import { buildSiteJsonLd } from "../../../lib/structured-data";
+import { buildSiteJsonLd, serializeJsonLd } from "../../../lib/structured-data";
 
 type SiteDetailPageProps = {
   params: Promise<{
@@ -53,7 +53,7 @@ export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
     <main className="page-shell detail-page">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       <Link className="back-link" href="/">

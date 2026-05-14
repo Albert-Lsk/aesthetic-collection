@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { sites } from "../data/sites";
-import { buildSiteJsonLd } from "./structured-data";
+import { buildSiteJsonLd, serializeJsonLd } from "./structured-data";
 
 describe("buildSiteJsonLd", () => {
   it("builds WebSite JSON-LD for a curated site", () => {
@@ -12,5 +12,9 @@ describe("buildSiteJsonLd", () => {
     expect(jsonLd.url).toBe("https://www.pinterest.com/");
     expect(jsonLd.keywords).toContain("灵感板");
     expect(jsonLd.description).toBe(sites[0].description);
+  });
+
+  it("serializes JSON-LD safely for script injection", () => {
+    expect(serializeJsonLd({ value: "</script><script>alert(1)</script>" })).not.toContain("</script>");
   });
 });
