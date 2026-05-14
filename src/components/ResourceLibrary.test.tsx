@@ -1,9 +1,19 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { sites } from "../data/sites";
 import { ResourceLibrary } from "./ResourceLibrary";
 
+const originalLocation = window.location;
+
 describe("ResourceLibrary", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: originalLocation,
+    });
+  });
+
   it("renders all sites by default", () => {
     render(<ResourceLibrary sites={sites} />);
 
@@ -52,5 +62,48 @@ describe("ResourceLibrary", () => {
     const tags = within(awwwardsCard).getAllByTestId("site-tag");
 
     expect(tags).toHaveLength(3);
+  });
+
+  it("focuses search with slash and clears filters with Escape", () => {
+    render(<ResourceLibrary sites={sites} />);
+
+    fireEvent.keyDown(window, { key: "/" });
+    expect(screen.getByLabelText("搜索网站")).toHaveFocus();
+
+    fireEvent.change(screen.getByLabelText("搜索网站"), { target: { value: "Slideland" } });
+    expect(screen.queryByRole("heading", { name: "Pinterest" })).not.toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.getByRole("heading", { name: "Pinterest" })).toBeInTheDocument();
+  });
+
+  it("opens the focused site with keyboard shortcuts when not on an interactive control", () => {
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { ...originalLocation, assign: vi.fn() },
+    });
+
+    render(<ResourceLibrary sites={sites} />);
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    fireEvent.keyDown(window, { key: "Enter" });
+    expect(openSpy).toHaveBeenCalledWith("https://dribbble.com/", "_blank", "noreferrer");
+
+    fireEvent.keyDown(window, { key: "D" });
+    expect(window.location.assign).toHaveBeenCalledWith("/sites/dribbble");
+  });
+
+  it("does not hijack Enter from focused buttons", () => {
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+
+    render(<ResourceLibrary sites={sites} />);
+
+    const awardButton = screen.getByRole("button", { name: "奖项榜单" });
+    awardButton.focus();
+    fireEvent.keyDown(awardButton, { key: "Enter", bubbles: true });
+
+    expect(openSpy).not.toHaveBeenCalled();
   });
 });

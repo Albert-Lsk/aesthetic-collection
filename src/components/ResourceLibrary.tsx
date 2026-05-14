@@ -24,6 +24,16 @@ function isTypingTarget(target: EventTarget | null) {
   );
 }
 
+function isInteractiveTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  return Boolean(
+    target.closest("a, button, input, textarea, select, [contenteditable='true'], [role='button'], [role='link']"),
+  );
+}
+
 export function ResourceLibrary({ sites }: ResourceLibraryProps) {
   const [query, setQuery] = useState("");
   const [type, setType] = useState<SiteType | "all">("all");
@@ -55,7 +65,7 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
         return;
       }
 
-      if (isTypingTarget(event.target) || filteredSites.length === 0) {
+      if (isInteractiveTarget(event.target) || filteredSites.length === 0) {
         return;
       }
 
