@@ -92,7 +92,7 @@ export const sites = [
   {
     name: "Designboom",
     slug: "designboom",
-    url: "https://www.designboom.com/",
+    url: "https://www.designboom.com",
     type: "media-magazine",
     summary: "覆盖建筑、艺术、科技和设计的国际媒体。",
     description:
