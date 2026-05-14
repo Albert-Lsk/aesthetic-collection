@@ -1,8 +1,16 @@
 import { FeaturedSites } from "../components/FeaturedSites";
 import { ResourceLibrary } from "../components/ResourceLibrary";
+import { SITE_TYPES } from "../data/site-types";
 import { sites } from "../data/sites";
+import { getAllTags } from "../data/site-utils";
 
 export default function HomePage() {
+  const stats = [
+    { label: "Sites", value: sites.length },
+    { label: "Types", value: SITE_TYPES.length },
+    { label: "Tags", value: getAllTags().length },
+  ];
+
   return (
     <main className="page-shell">
       <nav className="site-nav" aria-label="主页导航">
@@ -18,6 +26,15 @@ export default function HomePage() {
             为设计、内容和产品工作整理的灵感入口。按类型、标签和关键词快速筛选，找到适合当前任务的参考源。
           </p>
         </div>
+      </section>
+
+      <section className="collection-stats" aria-label="收藏统计">
+        {stats.map((stat) => (
+          <div className="collection-stats__item" key={stat.label}>
+            <span className="collection-stats__value">{stat.value}</span>
+            <span className="collection-stats__label">{stat.label}</span>
+          </div>
+        ))}
       </section>
 
       <FeaturedSites sites={sites} />

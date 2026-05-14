@@ -108,6 +108,36 @@ input {
   margin: 72px auto 0;
 }
 
+.collection-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 1320px;
+  margin: 18px auto 0;
+}
+
+.collection-stats__item {
+  display: grid;
+  gap: 6px;
+  border: 1px solid #171717;
+  border-radius: 8px;
+  padding: 18px;
+  background: #fffaf0;
+}
+
+.collection-stats__value {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.collection-stats__label {
+  color: #3f3f3f;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
 .section-heading {
   display: flex;
   align-items: end;
@@ -347,7 +377,8 @@ input {
   }
 
   .featured-sites__grid,
-  .site-grid {
+  .site-grid,
+  .collection-stats {
     grid-template-columns: 1fr;
   }
 
