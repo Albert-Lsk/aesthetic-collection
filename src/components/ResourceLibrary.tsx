@@ -145,8 +145,13 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
   return (
     <section className="resource-library" aria-labelledby="resource-library-title">
       <div className="section-heading">
-        <p className="section-kicker">Library</p>
-        <h2 id="resource-library-title">资源库</h2>
+        <div>
+          <p className="section-kicker">Filter Desk</p>
+          <h2 id="resource-library-title">下一步：打开一个入口</h2>
+        </div>
+        <p className="section-heading__note">
+          搜索、筛选，然后用卡片主按钮打开外站；需要背景时进入详情页。
+        </p>
       </div>
 
       <div className="resource-controls" aria-label="资源筛选">

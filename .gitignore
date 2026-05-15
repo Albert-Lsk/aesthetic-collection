@@ -1,4 +1,5 @@
 .worktrees/
+.superpowers/
 .next/
 node_modules/
 tsconfig.tsbuildinfo

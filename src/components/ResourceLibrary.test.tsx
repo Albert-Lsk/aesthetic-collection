@@ -17,6 +17,8 @@ describe("ResourceLibrary", () => {
   it("renders all sites by default", () => {
     render(<ResourceLibrary sites={sites} />);
 
+    expect(screen.getByRole("heading", { name: "下一步：打开一个入口" })).toBeInTheDocument();
+    expect(screen.getByText("Filter Desk")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Pinterest" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Ukiby Non Editions" })).toBeInTheDocument();
   });

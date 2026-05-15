@@ -52,10 +52,10 @@ export function SiteCard({ site, isFocused = false, tabIndex, onFocus, cardRef }
             rel="noreferrer"
             aria-label={`打开 ${site.name} 网站，新窗口`}
           >
-            打开网站
+            打开外站
           </a>
           <Link className="site-card__detail" href={detailHref}>
-            详情
+            看详情
           </Link>
         </div>
       </div>
