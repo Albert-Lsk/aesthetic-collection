@@ -32,7 +32,11 @@ export async function generateMetadata({ params }: SiteDetailPageProps): Promise
     openGraph: {
       title: `${site.name} | Aesthetic Collection`,
       description: site.summary,
-      images: [site.screenshotPath],
+      ...(site.screenshotStatus === "captured"
+        ? {
+            images: [site.screenshotPath],
+          }
+        : {}),
     },
   };
 }

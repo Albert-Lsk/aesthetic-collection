@@ -3,7 +3,7 @@ import os from "os";
 import path from "path";
 import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import SiteDetailPage from "./page";
+import SiteDetailPage, { generateMetadata } from "./page";
 
 const originalCwd = process.cwd();
 
@@ -13,6 +13,7 @@ describe("SiteDetailPage", () => {
   beforeEach(async () => {
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "site-detail-page-test-"));
     await fs.mkdir(path.join(tempDir, "public", "screenshots"), { recursive: true });
+    await fs.writeFile(path.join(tempDir, "public", "screenshots", "pinterest.png"), "");
     await fs.writeFile(
       path.join(tempDir, "public", "screenshots", "manifest.json"),
       `${JSON.stringify(
@@ -40,5 +41,21 @@ describe("SiteDetailPage", () => {
 
     expect(screen.getByText("截图暂不可用")).toBeInTheDocument();
     expect(screen.getByText("仍可查看详情与访问原站")).toBeInTheDocument();
+  });
+
+  it("omits open graph images when the screenshot capture failed", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "awwwards" }),
+    });
+
+    expect(metadata.openGraph?.images).toBeUndefined();
+  });
+
+  it("keeps open graph images for a captured screenshot", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "pinterest" }),
+    });
+
+    expect(metadata.openGraph?.images).toEqual(["/screenshots/pinterest.png"]);
   });
 });
