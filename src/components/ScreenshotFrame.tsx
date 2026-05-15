@@ -18,7 +18,12 @@ function ScreenshotPlaceholder({ site }: { site: Site }) {
         : "加载失败";
 
   return (
-    <div className="screenshot-placeholder" data-screenshot-status={site.screenshotStatus}>
+    <div
+      className="screenshot-placeholder"
+      data-screenshot-status={site.screenshotStatus}
+      role="img"
+      aria-label={`${site.name} 网站截图暂不可用`}
+    >
       <div className="screenshot-placeholder__badge">{statusLabel}</div>
       <div className="screenshot-placeholder__body">
         <strong>{site.name}</strong>

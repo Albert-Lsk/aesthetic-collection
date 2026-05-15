@@ -9,6 +9,7 @@ describe("SiteCard", () => {
 
     expect(screen.getByText("截图暂不可用")).toBeInTheDocument();
     expect(screen.getByText("仍可查看详情与访问原站")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Pinterest 网站截图暂不可用" })).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Pinterest 网站截图" })).not.toBeInTheDocument();
   });
 
