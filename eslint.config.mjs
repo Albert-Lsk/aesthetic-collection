@@ -3,6 +3,7 @@ import nextTypeScript from "eslint-config-next/typescript";
 
 const ignoredPaths = [
   ".next/**",
+  ".worktrees/**",
   "node_modules/**",
   "public/screenshots/**",
   "coverage/**"
