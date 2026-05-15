@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ScreenshotFrame } from "../../../components/ScreenshotFrame";
 import { SiteCard } from "../../../components/SiteCard";
 import { sites } from "../../../data/sites";
-import { getSiteBySlug, getSitesByType, getTypeLabel } from "../../../data/site-utils";
+import { getTypeLabel } from "../../../data/site-utils";
+import { getSitesWithScreenshotMetadata } from "../../../lib/screenshot-metadata";
 import { buildSiteJsonLd, serializeJsonLd } from "../../../lib/structured-data";
 
 type SiteDetailPageProps = {
@@ -18,7 +20,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: SiteDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const site = getSiteBySlug(slug);
+  const site = getSitesWithScreenshotMetadata().find((entry) => entry.slug === slug);
 
   if (!site) {
     return {};
@@ -37,14 +39,15 @@ export async function generateMetadata({ params }: SiteDetailPageProps): Promise
 
 export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
   const { slug } = await params;
-  const site = getSiteBySlug(slug);
+  const site = getSitesWithScreenshotMetadata().find((entry) => entry.slug === slug);
 
   if (!site) {
     notFound();
   }
 
   const typeLabel = getTypeLabel(site.type);
-  const relatedSites = getSitesByType(site.type)
+  const relatedSites = getSitesWithScreenshotMetadata()
+    .filter((relatedSite) => relatedSite.type === site.type)
     .filter((relatedSite) => relatedSite.slug !== site.slug)
     .slice(0, 3);
   const jsonLd = buildSiteJsonLd(site);
@@ -62,8 +65,7 @@ export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
 
       <article className="site-detail" data-site-slug={site.slug} data-site-type={site.type}>
         <div className="site-detail__hero">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Screenshot paths are local data records and may be pending placeholders. */}
-          <img className="site-detail__image" src={site.screenshotPath} alt={`${site.name} 网站截图`} />
+          <ScreenshotFrame site={site} imageClassName="site-detail__image" />
         </div>
 
         <div className="site-detail__intro">

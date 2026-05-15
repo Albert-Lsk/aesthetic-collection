@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteCard } from "../../../components/SiteCard";
 import { SITE_TYPES, type SiteType } from "../../../data/site-types";
-import { getSitesByType } from "../../../data/site-utils";
+import { getSitesWithScreenshotMetadata } from "../../../lib/screenshot-metadata";
 
 type TypePageProps = {
   params: Promise<{
@@ -26,7 +26,7 @@ export default async function TypePage({ params }: TypePageProps) {
     notFound();
   }
 
-  const typedSites = getSitesByType(siteType.id as SiteType);
+  const typedSites = getSitesWithScreenshotMetadata().filter((site) => site.type === (siteType.id as SiteType));
 
   return (
     <main className="page-shell type-page">

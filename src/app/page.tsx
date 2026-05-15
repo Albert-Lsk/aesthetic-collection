@@ -1,10 +1,11 @@
 import { FeaturedSites } from "../components/FeaturedSites";
 import { ResourceLibrary } from "../components/ResourceLibrary";
 import { SITE_TYPES } from "../data/site-types";
-import { sites } from "../data/sites";
 import { getAllTags } from "../data/site-utils";
+import { getSitesWithScreenshotMetadata } from "../lib/screenshot-metadata";
 
 export default function HomePage() {
+  const sites = getSitesWithScreenshotMetadata();
   const stats = [
     { label: "Sites", value: sites.length },
     { label: "Types", value: SITE_TYPES.length },

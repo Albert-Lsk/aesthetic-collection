@@ -4,4 +4,4 @@ node_modules/
 tsconfig.tsbuildinfo
 public/screenshots/*.png
 !public/screenshots/.gitkeep
-!public/screenshots/manifest.json
+public/screenshots/manifest.json

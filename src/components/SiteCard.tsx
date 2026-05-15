@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Site } from "../data/site-types";
 import { getTypeLabel } from "../data/site-utils";
+import { ScreenshotFrame } from "./ScreenshotFrame";
 
 type SiteCardProps = {
   site: Site;
@@ -19,8 +20,7 @@ export function SiteCard({ site, isFocused = false }: SiteCardProps) {
       data-testid={`site-card-${site.slug}`}
     >
       <Link className="site-card__image-link" href={detailHref} aria-label={`查看 ${site.name} 详情`}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- Screenshot paths are local data records and may be pending placeholders. */}
-        <img className="site-card__image" src={site.screenshotPath} alt={`${site.name} 网站截图`} />
+        <ScreenshotFrame site={site} imageClassName="site-card__image" />
       </Link>
       <div className="site-card__body">
         <div className="site-card__meta">

@@ -1,5 +1,5 @@
 import { SITE_TYPES } from "../data/site-types";
-import { sites } from "../data/sites";
+import { getSitesWithScreenshotMetadata } from "./screenshot-metadata";
 
 const version = "2026-05-14";
 const title = "Aesthetic Collection";
@@ -11,6 +11,6 @@ export function buildSitesJson() {
     title,
     source,
     types: SITE_TYPES,
-    sites,
+    sites: getSitesWithScreenshotMetadata(),
   };
 }
