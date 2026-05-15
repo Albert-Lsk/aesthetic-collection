@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FeaturedSites } from "../components/FeaturedSites";
 import { ResourceLibrary } from "../components/ResourceLibrary";
 import { SITE_TYPES } from "../data/site-types";
@@ -6,6 +7,7 @@ import { getSitesWithScreenshotMetadata } from "../lib/screenshot-metadata";
 
 export default function HomePage() {
   const sites = getSitesWithScreenshotMetadata();
+  const sourceTweetUrl = sites[0]?.sourceTweetUrl ?? "https://x.com/xiaoerzhan/status/2050427465714352451";
   const stats = [
     { label: "Sites", value: sites.length },
     { label: "Types", value: SITE_TYPES.length },
@@ -15,8 +17,17 @@ export default function HomePage() {
   return (
     <main className="page-shell">
       <nav className="site-nav" aria-label="主页导航">
-        <a href="#featured-sites-title">精选</a>
-        <a href="#resource-library-title">资源库</a>
+        <Link href="/">Aesthetic Collection</Link>
+        {SITE_TYPES.map((siteType) => (
+          <Link href={`/types/${siteType.id}`} key={siteType.id}>
+            {siteType.label}
+          </Link>
+        ))}
+        <Link href="/data/sites.json">/data/sites.json</Link>
+        <Link href="/llms.txt">/llms.txt</Link>
+        <a href={sourceTweetUrl} target="_blank" rel="noreferrer">
+          来源推文
+        </a>
       </nav>
 
       <section className="cover-section" aria-labelledby="home-title">

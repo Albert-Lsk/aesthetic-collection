@@ -1,3 +1,4 @@
+import type { Ref } from "react";
 import Link from "next/link";
 import type { Site } from "../data/site-types";
 import { getTypeLabel } from "../data/site-utils";
@@ -6,18 +7,24 @@ import { ScreenshotFrame } from "./ScreenshotFrame";
 type SiteCardProps = {
   site: Site;
   isFocused?: boolean;
+  tabIndex?: number;
+  onFocus?: () => void;
+  cardRef?: Ref<HTMLElement>;
 };
 
-export function SiteCard({ site, isFocused = false }: SiteCardProps) {
+export function SiteCard({ site, isFocused = false, tabIndex, onFocus, cardRef }: SiteCardProps) {
   const detailHref = `/sites/${site.slug}`;
 
   return (
     <article
+      ref={cardRef}
       className="site-card"
       data-site-slug={site.slug}
       data-site-type={site.type}
       data-focused={isFocused ? "true" : "false"}
       data-testid={`site-card-${site.slug}`}
+      tabIndex={tabIndex}
+      onFocus={onFocus}
     >
       <Link className="site-card__image-link" href={detailHref} aria-label={`查看 ${site.name} 详情`}>
         <ScreenshotFrame site={site} imageClassName="site-card__image" />

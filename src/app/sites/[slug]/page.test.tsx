@@ -39,6 +39,16 @@ describe("SiteDetailPage", () => {
 
     render(page);
 
+    expect(screen.getByRole("link", { name: "https://www.awwwards.com/" })).toHaveAttribute(
+      "href",
+      "https://www.awwwards.com/",
+    );
+    expect(screen.getByText("网页设计")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "来源推文" })).toHaveAttribute(
+      "href",
+      "https://x.com/xiaoerzhan/status/2050427465714352451",
+    );
+    expect(screen.getByText("2026-05-14")).toBeInTheDocument();
     expect(screen.getByText("截图暂不可用")).toBeInTheDocument();
     expect(screen.getByText("仍可查看详情与访问原站")).toBeInTheDocument();
   });

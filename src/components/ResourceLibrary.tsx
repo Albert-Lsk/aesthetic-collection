@@ -40,6 +40,8 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [focusedCardIndex, setFocusedCardIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const siteGridRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
   const tags = useMemo(() => getAllTags(), []);
   const filteredSites = useMemo(
@@ -48,6 +50,11 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
   );
 
   const hasFilters = query.trim() !== "" || type !== "all" || selectedTags.length > 0;
+
+  function focusCard(index: number) {
+    setFocusedCardIndex(index);
+    cardRefs.current[index]?.focus();
+  }
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -69,15 +76,24 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
         return;
       }
 
+      const activeElement = document.activeElement;
+      const isGridActive =
+        activeElement instanceof HTMLElement &&
+        (siteGridRef.current?.contains(activeElement) ?? false);
+
+      if (!isGridActive) {
+        return;
+      }
+
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        setFocusedCardIndex((index) => Math.min(index + 1, filteredSites.length - 1));
+        focusCard(Math.min(focusedCardIndex + 1, filteredSites.length - 1));
         return;
       }
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        setFocusedCardIndex((index) => Math.max(index - 1, 0));
+        focusCard(Math.max(focusedCardIndex - 1, 0));
         return;
       }
 
@@ -193,9 +209,18 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
       </div>
 
       {filteredSites.length > 0 ? (
-        <div className="site-grid" aria-label="网站列表">
+        <div ref={siteGridRef} className="site-grid" aria-label="网站列表">
           {filteredSites.map((site, index) => (
-            <SiteCard key={site.slug} site={site} isFocused={index === focusedCardIndex} />
+            <SiteCard
+              key={site.slug}
+              site={site}
+              isFocused={index === focusedCardIndex}
+              tabIndex={index === focusedCardIndex ? 0 : -1}
+              onFocus={() => setFocusedCardIndex(index)}
+              cardRef={(element) => {
+                cardRefs.current[index] = element;
+              }}
+            />
           ))}
         </div>
       ) : (

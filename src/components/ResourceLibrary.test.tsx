@@ -77,7 +77,7 @@ describe("ResourceLibrary", () => {
     expect(screen.getByRole("heading", { name: "Pinterest" })).toBeInTheDocument();
   });
 
-  it("opens the focused site with keyboard shortcuts when not on an interactive control", () => {
+  it("only activates card-grid keyboard shortcuts after the grid has focus", () => {
     const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
 
     Object.defineProperty(window, "location", {
@@ -88,6 +88,14 @@ describe("ResourceLibrary", () => {
     render(<ResourceLibrary sites={sites} />);
 
     fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(screen.getByTestId("site-card-dribbble")).not.toHaveFocus();
+
+    screen.getByTestId("site-card-pinterest").focus();
+    expect(screen.getByTestId("site-card-pinterest")).toHaveFocus();
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(screen.getByTestId("site-card-dribbble")).toHaveFocus();
+
     fireEvent.keyDown(window, { key: "Enter" });
     expect(openSpy).toHaveBeenCalledWith("https://dribbble.com/", "_blank", "noreferrer");
 

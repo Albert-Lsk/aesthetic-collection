@@ -37,7 +37,8 @@ input {
   top: 0;
   z-index: 20;
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 8px;
   padding: 12px 0;
   background: rgb(247 242 234 / 88%);
@@ -53,6 +54,7 @@ input {
 }
 
 .site-nav a:focus-visible,
+.site-card:focus-visible,
 .site-card a:focus-visible,
 .resource-controls button:focus-visible,
 .resource-controls input:focus-visible,
@@ -501,6 +503,32 @@ input {
   color: #3f3f3f;
   font-size: clamp(17px, 2vw, 21px);
   line-height: 1.6;
+}
+
+.detail-meta-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.detail-meta-row {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.detail-meta-row span {
+  color: #5c6f68;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.detail-meta-row a,
+.detail-meta-row time {
+  overflow-wrap: anywhere;
 }
 
 .primary-action {

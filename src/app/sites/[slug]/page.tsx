@@ -78,6 +78,24 @@ export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
           </Link>
           <h1>{site.name}</h1>
           <p>{site.summary}</p>
+          <div className="detail-meta-list" aria-label={`${site.name} 页面元信息`}>
+            <p className="detail-meta-row">
+              <span>Canonical URL</span>
+              <a href={site.url} target="_blank" rel="noreferrer">
+                {site.url}
+              </a>
+            </p>
+            <p className="detail-meta-row">
+              <span>Source</span>
+              <a href={site.sourceTweetUrl} target="_blank" rel="noreferrer">
+                来源推文
+              </a>
+            </p>
+            <p className="detail-meta-row">
+              <span>Last updated</span>
+              <time dateTime={site.updatedAt}>{site.updatedAt}</time>
+            </p>
+          </div>
           <a
             className="primary-action"
             href={site.url}
@@ -88,6 +106,15 @@ export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
             打开网站
           </a>
         </div>
+
+        <section className="detail-section" aria-labelledby="tags-title">
+          <h2 id="tags-title">标签</h2>
+          <ul className="pill-list" aria-label={`${site.name} 标签`}>
+            {site.tags.map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
+          </ul>
+        </section>
 
         <section className="detail-section" aria-labelledby="why-title">
           <h2 id="why-title">为什么值得收藏</h2>
