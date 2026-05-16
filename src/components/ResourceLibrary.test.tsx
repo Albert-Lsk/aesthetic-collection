@@ -4,6 +4,7 @@ import { sites } from "../data/sites";
 import { ResourceLibrary } from "./ResourceLibrary";
 
 const originalLocation = window.location;
+const originalScrollY = window.scrollY;
 
 describe("ResourceLibrary", () => {
   afterEach(() => {
@@ -11,6 +12,10 @@ describe("ResourceLibrary", () => {
     Object.defineProperty(window, "location", {
       configurable: true,
       value: originalLocation,
+    });
+    Object.defineProperty(window, "scrollY", {
+      configurable: true,
+      value: originalScrollY,
     });
   });
 
@@ -21,6 +26,35 @@ describe("ResourceLibrary", () => {
     expect(screen.getByText("Filter Desk")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Pinterest" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Ukiby Non Editions" })).toBeInTheDocument();
+  });
+
+  it("collapses the filter panel after scrolling down", () => {
+    render(<ResourceLibrary sites={sites} />);
+
+    Object.defineProperty(window, "scrollY", {
+      configurable: true,
+      value: 1200,
+    });
+    fireEvent.scroll(window);
+
+    expect(screen.getByRole("button", { name: "搜索网站" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "全部" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("searchbox", { name: "搜索网站" })).not.toBeInTheDocument();
+  });
+
+  it("reveals the filters when the compact toggle is opened", () => {
+    render(<ResourceLibrary sites={sites} />);
+
+    Object.defineProperty(window, "scrollY", {
+      configurable: true,
+      value: 1200,
+    });
+    fireEvent.scroll(window);
+
+    fireEvent.click(screen.getByRole("button", { name: "搜索网站" }));
+
+    expect(screen.getByLabelText("搜索网站")).toHaveFocus();
+    expect(screen.getByRole("button", { name: "全部" })).toBeInTheDocument();
   });
 
   it("filters by search query", () => {

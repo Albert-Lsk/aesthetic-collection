@@ -39,8 +39,12 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
   const [type, setType] = useState<SiteType | "all">("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [focusedCardIndex, setFocusedCardIndex] = useState(0);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isManuallyExpanded, setIsManuallyExpanded] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const siteGridRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const shouldFocusSearchAfterExpandRef = useRef(false);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
 
   const tags = useMemo(() => getAllTags(), []);
@@ -56,7 +60,31 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
     cardRefs.current[index]?.focus();
   }
 
+  function expandSearchControls() {
+    shouldFocusSearchAfterExpandRef.current = true;
+    setIsManuallyExpanded(true);
+    setIsCollapsed(false);
+  }
+
+  function hideSearchControls() {
+    setIsManuallyExpanded(false);
+    setIsCollapsed(window.scrollY > 900);
+  }
+
   useEffect(() => {
+    function handleScroll() {
+      const isPastLibraryStart = window.scrollY > 900;
+      if (!isPastLibraryStart) {
+        setIsManuallyExpanded(false);
+      }
+
+      const nextIsCollapsed = isPastLibraryStart && !isManuallyExpanded;
+      setIsCollapsed(nextIsCollapsed);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "/" && !isTypingTarget(event.target)) {
         event.preventDefault();
@@ -112,8 +140,23 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
     }
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [filteredSites, focusedCardIndex]);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [filteredSites, focusedCardIndex, isManuallyExpanded]);
+
+  useEffect(() => {
+    if (!shouldFocusSearchAfterExpandRef.current || isCollapsed) {
+      return;
+    }
+
+    if (typeof controlsRef.current?.scrollIntoView === "function") {
+      controlsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    searchInputRef.current?.focus();
+    shouldFocusSearchAfterExpandRef.current = false;
+  }, [isCollapsed]);
 
   function toggleTag(tag: string) {
     setFocusedCardIndex(0);
@@ -154,63 +197,82 @@ export function ResourceLibrary({ sites }: ResourceLibraryProps) {
         </p>
       </div>
 
-      <div className="resource-controls" aria-label="资源筛选">
-        <div className="search-control">
-          <label htmlFor="site-search">搜索网站</label>
-          <input
-            ref={searchInputRef}
-            id="site-search"
-            type="search"
-            value={query}
-            onChange={(event) => updateQuery(event.target.value)}
-            placeholder="搜索名称、标签、用途..."
-          />
-        </div>
-
-        <div className="segmented-control" aria-label="网站类型">
+      <div ref={controlsRef} className="resource-controls__shell">
+        {isCollapsed ? (
           <button
             type="button"
-            className="segment-button"
-            aria-pressed={type === "all"}
-            onClick={() => updateType("all")}
+            className="floating-search-button"
+            onClick={expandSearchControls}
           >
-            全部
+            搜索网站
           </button>
-          {SITE_TYPES.map((siteType) => (
-            <button
-              type="button"
-              className="segment-button"
-              aria-pressed={type === siteType.id}
-              onClick={() => updateType(siteType.id)}
-              key={siteType.id}
-            >
-              {siteType.label}
-            </button>
-          ))}
-        </div>
+        ) : (
+          <div className="resource-controls" aria-label="资源筛选">
+            <div className="resource-controls__topline">
+              <div className="search-control">
+                <label htmlFor="site-search">搜索网站</label>
+                <input
+                  ref={searchInputRef}
+                  id="site-search"
+                  type="search"
+                  value={query}
+                  onChange={(event) => updateQuery(event.target.value)}
+                  placeholder="搜索名称、标签、用途..."
+                />
+              </div>
+              {isManuallyExpanded ? (
+                <button type="button" className="inline-collapse-button" onClick={hideSearchControls}>
+                  隐藏筛选
+                </button>
+              ) : null}
+            </div>
 
-        <div className="tag-filter" aria-label="标签筛选">
-          {tags.map((tag) => (
-            <button
-              type="button"
-              className="tag-filter__button"
-              aria-pressed={selectedTags.includes(tag)}
-              onClick={() => toggleTag(tag)}
-              key={tag}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
+            <div className="segmented-control" aria-label="网站类型">
+              <button
+                type="button"
+                className="segment-button"
+                aria-pressed={type === "all"}
+                onClick={() => updateType("all")}
+              >
+                全部
+              </button>
+              {SITE_TYPES.map((siteType) => (
+                <button
+                  type="button"
+                  className="segment-button"
+                  aria-pressed={type === siteType.id}
+                  onClick={() => updateType(siteType.id)}
+                  key={siteType.id}
+                >
+                  {siteType.label}
+                </button>
+              ))}
+            </div>
 
-        <div className="resource-controls__footer">
-          <p aria-live="polite">{filteredSites.length} 个网站</p>
-          {hasFilters && filteredSites.length > 0 ? (
-            <button type="button" className="clear-button" onClick={clearFilters}>
-              清空筛选
-            </button>
-          ) : null}
-        </div>
+            <div className="tag-filter" aria-label="标签筛选">
+              {tags.map((tag) => (
+                <button
+                  type="button"
+                  className="tag-filter__button"
+                  aria-pressed={selectedTags.includes(tag)}
+                  onClick={() => toggleTag(tag)}
+                  key={tag}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+
+            <div className="resource-controls__footer">
+              <p aria-live="polite">{filteredSites.length} 个网站</p>
+              {hasFilters && filteredSites.length > 0 ? (
+                <button type="button" className="clear-button" onClick={clearFilters}>
+                  清空筛选
+                </button>
+              ) : null}
+            </div>
+          </div>
+        )}
       </div>
 
       {filteredSites.length > 0 ? (
