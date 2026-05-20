@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { githubPagesUrl } from "../config/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aesthetic-collection.local"),
+  metadataBase: new URL(githubPagesUrl),
   title: "Aesthetic Collection",
   description: "A curated navigation library of aesthetic and design inspiration websites."
 };

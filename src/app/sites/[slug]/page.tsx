@@ -5,6 +5,7 @@ import { ScreenshotFrame } from "../../../components/ScreenshotFrame";
 import { SiteCard } from "../../../components/SiteCard";
 import { sites } from "../../../data/sites";
 import { getTypeLabel } from "../../../data/site-utils";
+import { resolvePublicPath } from "../../../config/public-path";
 import { getSitesWithScreenshotMetadata } from "../../../lib/screenshot-metadata";
 import { buildSiteJsonLd, serializeJsonLd } from "../../../lib/structured-data";
 
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: SiteDetailPageProps): Promise
       description: site.summary,
       ...(site.screenshotStatus === "captured"
         ? {
-            images: [site.screenshotPath],
+            images: [resolvePublicPath(site.screenshotPath)],
           }
         : {}),
     },

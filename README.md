@@ -4,6 +4,8 @@ Aesthetic Collection is a curated index of design and aesthetic reference websit
 
 It is built as a human-facing resource page and an agent-readable dataset at the same time. The frontend is optimized for fast search, filtering, and opening external sites. The backend data is kept structured so the same collection can later be reused by AI tools, MCP servers, or other automation.
 
+Live preview: https://albert-lsk.github.io/aesthetic-collection/
+
 ## What It Includes
 
 - A magazine-style homepage for browsing curated design resources.
@@ -71,13 +73,20 @@ npm run build
 
 ## Deployment
 
-This is a standard Next.js app and can be deployed to Vercel or any Node-compatible host.
+The primary public preview is deployed with GitHub Pages:
 
-Recommended Vercel settings:
+- Workflow: `.github/workflows/deploy-pages.yml`
+- Trigger: every push to `master`, plus manual `workflow_dispatch`
+- Output: static Next.js export in `out/`
+- URL: `https://albert-lsk.github.io/aesthetic-collection/`
 
-- Framework preset: Next.js
-- Build command: `npm run build`
-- Install command: `npm install`
+For local verification of the GitHub Pages build:
+
+```bash
+NEXT_PUBLIC_GITHUB_PAGES=true npm run build
+```
+
+The app can still be deployed to Vercel or another Next-compatible host if dynamic hosting is needed later.
 
 ## Screenshot Notice
 

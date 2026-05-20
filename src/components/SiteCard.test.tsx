@@ -1,9 +1,15 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { sites } from "../data/sites";
 import { SiteCard } from "./SiteCard";
 
+const originalGitHubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES;
+
 describe("SiteCard", () => {
+  afterEach(() => {
+    process.env.NEXT_PUBLIC_GITHUB_PAGES = originalGitHubPages;
+  });
+
   it("renders a polished placeholder when screenshot capture failed", () => {
     render(<SiteCard site={{ ...sites[0], screenshotStatus: "failed" }} />);
 
@@ -21,5 +27,16 @@ describe("SiteCard", () => {
 
     expect(screen.getByText("仍可查看详情与访问原站")).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Pinterest 网站截图" })).not.toBeInTheDocument();
+  });
+
+  it("prefixes screenshot images for GitHub Pages builds", () => {
+    process.env.NEXT_PUBLIC_GITHUB_PAGES = "true";
+
+    render(<SiteCard site={{ ...sites[0], screenshotStatus: "captured" }} />);
+
+    expect(screen.getByRole("img", { name: "Pinterest 网站截图" })).toHaveAttribute(
+      "src",
+      "/aesthetic-collection/screenshots/pinterest.png",
+    );
   });
 });

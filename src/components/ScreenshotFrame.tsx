@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { resolvePublicPath } from "../config/public-path";
 import type { Site } from "../data/site-types";
 
 type ScreenshotFrameProps = {
@@ -47,7 +48,7 @@ export function ScreenshotFrame({ site, className, imageClassName }: ScreenshotF
         // eslint-disable-next-line @next/next/no-img-element -- Screenshot paths are local data records and can fail at runtime, so this keeps a client-side fallback.
         <img
           className={imageClassName}
-          src={site.screenshotPath}
+          src={resolvePublicPath(site.screenshotPath)}
           alt={`${site.name} 网站截图`}
           onError={() => setHasImageError(true)}
         />

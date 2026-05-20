@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import SiteDetailPage, { generateMetadata } from "./page";
 
 const originalCwd = process.cwd();
+const originalGitHubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES;
 
 describe("SiteDetailPage", () => {
   let tempDir: string;
@@ -30,6 +31,7 @@ describe("SiteDetailPage", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
+    process.env.NEXT_PUBLIC_GITHUB_PAGES = originalGitHubPages;
   });
 
   it("renders a screenshot placeholder when a site's capture failed", async () => {
@@ -67,5 +69,15 @@ describe("SiteDetailPage", () => {
     });
 
     expect(metadata.openGraph?.images).toEqual(["/screenshots/pinterest.png"]);
+  });
+
+  it("prefixes open graph images for GitHub Pages builds", async () => {
+    process.env.NEXT_PUBLIC_GITHUB_PAGES = "true";
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "pinterest" }),
+    });
+
+    expect(metadata.openGraph?.images).toEqual(["/aesthetic-collection/screenshots/pinterest.png"]);
   });
 });
