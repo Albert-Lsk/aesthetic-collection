@@ -47,10 +47,13 @@ describe("HomePage", () => {
     expect(screen.getByText("Filter by type")).toBeInTheDocument();
     expect(screen.getByText("Open site")).toBeInTheDocument();
     expect(screen.getByText("Read detail")).toBeInTheDocument();
+    expect(screen.getByLabelText("精选视觉索引墙")).toHaveTextContent("Awwwards");
+    expect(screen.getByLabelText("精选视觉索引墙")).toHaveTextContent("Designspiration");
+    expect(screen.getByLabelText("精选视觉索引墙")).toHaveTextContent("Slideland");
+    expect(screen.getByLabelText("结构化数据摘要")).toHaveTextContent("15");
+    expect(screen.getByRole("link", { name: "Agent readable" })).toHaveAttribute("href", "/llms.txt");
     expect(screen.getByRole("heading", { name: "精选入口" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "下一步：打开一个入口" })).toBeInTheDocument();
     expect(screen.getByRole("searchbox", { name: "搜索网站" })).toBeInTheDocument();
-    expect(screen.getByLabelText("收藏统计")).toHaveTextContent("15");
-    expect(screen.getByLabelText("收藏统计")).toHaveTextContent("6");
   });
 });

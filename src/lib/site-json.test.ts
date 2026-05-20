@@ -64,8 +64,8 @@ describe("buildSitesJson", () => {
     expect(pinterest?.screenshotCapturedAt).toBe("2026-05-15T08:00:00.000Z");
     expect(awwwards?.screenshotStatus).toBe("failed");
     expect(awwwards?.screenshotCapturedAt).toBeUndefined();
-    expect(blogDecoDesign?.screenshotStatus).toBe("failed");
-    expect(blogDecoDesign?.screenshotCapturedAt).toBeUndefined();
+    expect(blogDecoDesign?.screenshotStatus).toBe("captured");
+    expect(blogDecoDesign?.screenshotCapturedAt).toBe("2026-05-15T08:00:00.000Z");
     expect(behance?.screenshotStatus).toBe("pending");
     expect(behance?.screenshotCapturedAt).toBeUndefined();
   });

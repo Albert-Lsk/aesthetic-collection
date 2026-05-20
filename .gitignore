@@ -1,8 +1,9 @@
 .worktrees/
 .superpowers/
+.DS_Store
+**/.DS_Store
+CLAUDE.md
 .next/
 node_modules/
 tsconfig.tsbuildinfo
-public/screenshots/*.png
 !public/screenshots/.gitkeep
-public/screenshots/manifest.json

@@ -47,6 +47,6 @@ describe("GET /data/sites.json", () => {
     expect(payload.sites).toHaveLength(15);
     expect(pinterest.screenshotStatus).toBe("captured");
     expect(awwwards.screenshotStatus).toBe("failed");
-    expect(blogDecoDesign.screenshotStatus).toBe("failed");
+    expect(blogDecoDesign.screenshotStatus).toBe("captured");
   });
 });

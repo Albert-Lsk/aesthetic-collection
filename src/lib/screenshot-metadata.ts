@@ -41,19 +41,19 @@ export function getSitesWithScreenshotMetadata(): Site[] {
   const failedSlugs = new Set((manifest.failures ?? []).map((failure) => failure.slug));
 
   return sites.map((site) => {
-    if (failedSlugs.has(site.slug)) {
-      return {
-        ...site,
-        screenshotStatus: "failed" as const,
-        screenshotCapturedAt: undefined,
-      };
-    }
-
     if (hasScreenshotFile(site.slug)) {
       return {
         ...site,
         screenshotStatus: "captured" as const,
         screenshotCapturedAt: manifest.capturedAt,
+      };
+    }
+
+    if (failedSlugs.has(site.slug)) {
+      return {
+        ...site,
+        screenshotStatus: "failed" as const,
+        screenshotCapturedAt: undefined,
       };
     }
 
